@@ -1,0 +1,152 @@
+Error:
+  type: object
+  required: [error]
+  properties:
+    error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string, example: not_found }
+        message: { type: string }
+        details:
+          type: object
+          nullable: true
+          additionalProperties: true
+
+Pagination:
+  type: object
+  properties:
+    limit: { type: integer }
+    offset: { type: integer }
+    total: { type: integer }
+
+User:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    username: { type: string }
+    email: { type: string, format: email }
+    preferences:
+      type: object
+      properties:
+        theme: { type: string, enum: [light, dark] }
+        timezone: { type: string }
+        language: { type: string }
+    createdAt: { type: string, format: date-time }
+
+Repository:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    type: { type: string, enum: [git, obsidian, notion] }
+    url: { type: string }
+    createdAt: { type: string, format: date-time }
+
+Account:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    platform: { type: string }
+    handle: { type: string }
+    createdAt: { type: string, format: date-time }
+
+Integration:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    accountId: { type: string, format: uuid }
+    status: { type: string, enum: [connected, disconnected, syncing, errored] }
+    lastSync: { type: string, format: date-time, nullable: true }
+    lastError: { type: string, nullable: true }
+
+Tag:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    name: { type: string }
+
+Problem:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    externalId: { type: string }
+    platform: { type: string }
+    title: { type: string }
+    difficulty: { type: integer }
+    tags:
+      type: array
+      items: { $ref: '#/Tag' }
+
+ProblemReview:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    problemId: { type: string, format: uuid }
+    nextReviewDate: { type: string, format: date }
+    interval: { type: integer, description: Days until next review. }
+    retentionLevel: { type: integer }
+    status: { type: string, enum: [pending, upsolve-required, completed] }
+    solutionReference: { type: string, nullable: true }
+
+Review:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    problemReviewId: { type: string, format: uuid }
+    result: { type: string, enum: [success, failed] }
+    reviewedAt: { type: string, format: date-time }
+
+Note:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    problemId: { type: string, format: uuid, nullable: true }
+    path: { type: string }
+    content: { type: string }
+    updatedAt: { type: string, format: date-time }
+
+Contest:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    externalId: { type: string }
+    platform: { type: string }
+    startDate: { type: string, format: date }
+
+ContestParticipation:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    contestId: { type: string, format: uuid }
+    rank: { type: integer }
+    ratingChange: { type: integer }
+    solvedProblemIds:
+      type: array
+      items: { type: string, format: uuid }
+
+Upsolve:
+  type: object
+  properties:
+    id: { type: string, format: uuid }
+    contestId: { type: string, format: uuid }
+    problemId: { type: string, format: uuid }
+    problemReviewId: { type: string, format: uuid, nullable: true }
+    status: { type: string, enum: [pending, completed, skipped] }
+    createdAt: { type: string, format: date-time }
+    completedAt: { type: string, format: date-time, nullable: true }
+
+DashboardSummary:
+  type: object
+  properties:
+    solvedProblemsCount: { type: integer }
+    pendingReviewsCount: { type: integer }
+    currentStreak: { type: integer }
+    lastSyncedAt: { type: string, format: date-time, nullable: true }
+    hasStaleIntegrations: { type: boolean }
+
+StatisticsBreakdown:
+  type: object
+  properties:
+    byPlatform: { type: object, additionalProperties: { type: integer } }
+    byTag: { type: object, additionalProperties: { type: integer } }
+    byDifficulty: { type: object, additionalProperties: { type: integer } }

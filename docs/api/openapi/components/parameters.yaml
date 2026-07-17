@@ -1,0 +1,71 @@
+IdPathParam:
+  name: id
+  in: path
+  required: true
+  schema:
+    type: string
+    format: uuid
+  description: Resource identifier.
+
+LimitParam:
+  name: limit
+  in: query
+  required: false
+  schema:
+    type: integer
+    default: 20
+    maximum: 100
+    minimum: 1
+
+OffsetParam:
+  name: offset
+  in: query
+  required: false
+  schema:
+    type: integer
+    default: 0
+    minimum: 0
+
+PlatformFilterParam:
+  name: platform
+  in: query
+  required: false
+  schema:
+    type: string
+    enum: [codeforces, leetcode, atcoder, cses, kattis, hackerrank, codechef]
+  description: Filter by external platform.
+
+TagsFilterParam:
+  name: tags
+  in: query
+  required: false
+  schema:
+    type: string
+  description: Comma-separated list of tag names, e.g. "dp,graphs".
+
+DifficultyFilterParam:
+  name: difficulty
+  in: query
+  required: false
+  schema:
+    type: integer
+  description: Exact difficulty/rating value to filter by.
+
+ReviewStatusFilterParam:
+  name: status
+  in: query
+  required: false
+  schema:
+    type: string
+    enum: [pending, upsolve-required, completed]
+  description: Filter Problem Reviews by status.
+
+IdempotencyKeyHeader:
+  name: Idempotency-Key
+  in: header
+  required: false
+  schema:
+    type: string
+  description: >
+    Optional client-generated key preventing duplicate side effects on
+    retried requests (see conventions.md — Idempotency).

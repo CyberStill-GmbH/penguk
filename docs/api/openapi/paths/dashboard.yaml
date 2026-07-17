@@ -1,0 +1,28 @@
+getDashboard:
+  get:
+    tags: [Dashboard]
+    summary: Aggregated overview of the user's progress (FR-009)
+    responses:
+      '200':
+        description: >
+          OK. If one or more Integrations are errored, this still returns
+          the last successfully synced data, with hasStaleIntegrations set
+          to true (per UC-006).
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/DashboardSummary' }
+
+getStatistics:
+  get:
+    tags: [Dashboard]
+    summary: Breakdown of progress by platform, tag, and difficulty (FR-010)
+    parameters:
+      - $ref: '../components/parameters.yaml#/PlatformFilterParam'
+      - $ref: '../components/parameters.yaml#/TagsFilterParam'
+      - $ref: '../components/parameters.yaml#/DifficultyFilterParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/StatisticsBreakdown' }

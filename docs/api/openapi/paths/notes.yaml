@@ -1,0 +1,101 @@
+listNotes:
+  get:
+    tags: [Notes]
+    summary: List Notes from the connected Repository
+    parameters:
+      - name: problemId
+        in: query
+        required: false
+        schema: { type: string, format: uuid }
+        description: Filter Notes linked to a specific Problem.
+      - $ref: '../components/parameters.yaml#/LimitParam'
+      - $ref: '../components/parameters.yaml#/OffsetParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items: { $ref: '../components/schemas.yaml#/Note' }
+                pagination: { $ref: '../components/schemas.yaml#/Pagination' }
+
+createNote:
+  post:
+    tags: [Notes]
+    summary: Create a Note, written to the connected Repository (BR-006)
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [content]
+            properties:
+              problemId: { type: string, format: uuid, nullable: true }
+              content: { type: string }
+    responses:
+      '201':
+        description: Created and written to the Repository.
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Note' }
+      '409':
+        description: No Repository connected; connect one first (see users.yaml -- setRepository).
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Error' }
+
+getNote:
+  get:
+    tags: [Notes]
+    summary: Get a single Note
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Note' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+
+updateNote:
+  patch:
+    tags: [Notes]
+    summary: Update a Note's content or Problem link
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              problemId: { type: string, format: uuid, nullable: true }
+              content: { type: string }
+    responses:
+      '200':
+        description: Updated.
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Note' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+
+deleteNote:
+  delete:
+    tags: [Notes]
+    summary: Delete a Note
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '204':
+        description: Deleted.
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'

@@ -1,0 +1,74 @@
+listIntegrations:
+  get:
+    tags: [Integrations]
+    summary: List connected platform accounts and their sync status
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: array
+              items: { $ref: '../components/schemas.yaml#/Integration' }
+
+connectIntegration:
+  post:
+    tags: [Integrations]
+    summary: Connect a supported platform account (BR-009 -- at most one per platform)
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [platform, handle]
+            properties:
+              platform:
+                type: string
+                enum: [codeforces, leetcode, atcoder, cses, kattis, hackerrank, codechef]
+              handle: { type: string }
+    responses:
+      '201':
+        description: Connected; an initial sync is enqueued.
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Integration' }
+      '409':
+        description: An account for this platform is already connected (BR-009).
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Error' }
+
+disconnectIntegration:
+  delete:
+    tags: [Integrations]
+    summary: Disconnect a platform account
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '204':
+        description: Disconnected.
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+
+triggerSync:
+  post:
+    tags: [Integrations]
+    summary: Manually trigger a synchronization job
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+      - $ref: '../components/parameters.yaml#/IdempotencyKeyHeader'
+    responses:
+      '202':
+        description: Sync job enqueued.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                jobId: { type: string, format: uuid }
+                status: { type: string, enum: [queued] }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+      '503':
+        $ref: '../components/responses.yaml#/UpstreamUnavailable'

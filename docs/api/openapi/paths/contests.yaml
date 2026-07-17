@@ -1,0 +1,103 @@
+listContests:
+  get:
+    tags: [Contests]
+    summary: List Contests
+    parameters:
+      - $ref: '../components/parameters.yaml#/PlatformFilterParam'
+      - $ref: '../components/parameters.yaml#/LimitParam'
+      - $ref: '../components/parameters.yaml#/OffsetParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items: { $ref: '../components/schemas.yaml#/Contest' }
+                pagination: { $ref: '../components/schemas.yaml#/Pagination' }
+
+getContest:
+  get:
+    tags: [Contests]
+    summary: Get a single Contest
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Contest' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+
+getContestParticipation:
+  get:
+    tags: [Contests]
+    summary: Get the authenticated user's participation in a Contest
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/ContestParticipation' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'
+
+listUpsolves:
+  get:
+    tags: [Contests]
+    summary: List obligatory Upsolves (BR-007)
+    parameters:
+      - name: status
+        in: query
+        required: false
+        schema: { type: string, enum: [pending, completed, skipped] }
+      - $ref: '../components/parameters.yaml#/LimitParam'
+      - $ref: '../components/parameters.yaml#/OffsetParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items: { $ref: '../components/schemas.yaml#/Upsolve' }
+                pagination: { $ref: '../components/schemas.yaml#/Pagination' }
+
+updateUpsolve:
+  patch:
+    tags: [Contests]
+    summary: Mark an Upsolve as completed or skipped
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status]
+            properties:
+              status: { type: string, enum: [completed, skipped] }
+              problemReviewId:
+                type: string
+                format: uuid
+                nullable: true
+                description: Linked once the user starts working on the Problem Review.
+    responses:
+      '200':
+        description: Updated.
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Upsolve' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'

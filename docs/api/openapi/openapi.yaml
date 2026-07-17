@@ -1,0 +1,127 @@
+openapi: 3.0.3
+
+info:
+  title: Penguk API
+  version: 1.0.0
+  description: >
+    Centralized competitive programming progress tracker. See
+    ../overview.md for the human-readable companion to this spec.
+
+servers:
+  - url: https://api.penguk.dev/v1
+    description: Production
+  - url: http://localhost:3000/v1
+    description: Local development
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Auth
+  - name: Users
+  - name: Integrations
+  - name: Problems
+  - name: Reviews
+  - name: Notes
+  - name: Contests
+  - name: Dashboard
+
+paths:
+  /auth/register:
+    $ref: './paths/auth.yaml#/register'
+  /auth/login:
+    $ref: './paths/auth.yaml#/login'
+  /auth/github:
+    $ref: './paths/auth.yaml#/githubRedirect'
+  /auth/github/callback:
+    $ref: './paths/auth.yaml#/githubCallback'
+  /auth/logout:
+    $ref: './paths/auth.yaml#/logout'
+
+  /users/me:
+    get:
+      $ref: './paths/users.yaml#/getMe/get'
+    patch:
+      $ref: './paths/users.yaml#/updateMe/patch'
+    delete:
+      $ref: './paths/users.yaml#/deleteMe/delete'
+  /users/me/export:
+    $ref: './paths/users.yaml#/exportMe'
+  /users/me/repository:
+    get:
+      $ref: './paths/users.yaml#/getRepository/get'
+    put:
+      $ref: './paths/users.yaml#/setRepository/put'
+    delete:
+      $ref: './paths/users.yaml#/deleteRepository/delete'
+
+  /integrations:
+    get:
+      $ref: './paths/integrations.yaml#/listIntegrations/get'
+    post:
+      $ref: './paths/integrations.yaml#/connectIntegration/post'
+  /integrations/{id}:
+    delete:
+      $ref: './paths/integrations.yaml#/disconnectIntegration/delete'
+  /integrations/{id}/sync:
+    post:
+      $ref: './paths/integrations.yaml#/triggerSync/post'
+
+  /problems:
+    $ref: './paths/problems.yaml#/listProblems'
+  /problems/{id}:
+    $ref: './paths/problems.yaml#/getProblem'
+
+  /problem-reviews:
+    $ref: './paths/reviews.yaml#/listProblemReviews'
+  /problem-reviews/{id}:
+    get:
+      $ref: './paths/reviews.yaml#/getProblemReview/get'
+    patch:
+      $ref: './paths/reviews.yaml#/updateProblemReview/patch'
+  /problem-reviews/{id}/review:
+    post:
+      $ref: './paths/reviews.yaml#/logReview/post'
+
+  /notes:
+    get:
+      $ref: './paths/notes.yaml#/listNotes/get'
+    post:
+      $ref: './paths/notes.yaml#/createNote/post'
+  /notes/{id}:
+    get:
+      $ref: './paths/notes.yaml#/getNote/get'
+    patch:
+      $ref: './paths/notes.yaml#/updateNote/patch'
+    delete:
+      $ref: './paths/notes.yaml#/deleteNote/delete'
+
+  /contests:
+    $ref: './paths/contests.yaml#/listContests'
+  /contests/{id}:
+    $ref: './paths/contests.yaml#/getContest'
+  /contests/{id}/participation:
+    $ref: './paths/contests.yaml#/getContestParticipation'
+  /upsolves:
+    $ref: './paths/contests.yaml#/listUpsolves'
+  /upsolves/{id}:
+    patch:
+      $ref: './paths/contests.yaml#/updateUpsolve/patch'
+
+  /dashboard:
+    $ref: './paths/dashboard.yaml#/getDashboard'
+  /statistics:
+    $ref: './paths/dashboard.yaml#/getStatistics'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: './components/security.yaml#/bearerAuth'
+    githubOAuth:
+      $ref: './components/security.yaml#/githubOAuth'
+  schemas:
+    $ref: './components/schemas.yaml'
+  parameters:
+    $ref: './components/parameters.yaml'
+  responses:
+    $ref: './components/responses.yaml'

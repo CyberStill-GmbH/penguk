@@ -1,0 +1,18 @@
+bearerAuth:
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: >
+    Stateless JWT obtained via POST /auth/login or the GitHub OAuth flow
+    (see authentication.md). Required on every endpoint except
+    /auth/register, /auth/login, /auth/github, /auth/github/callback.
+
+githubOAuth:
+  type: oauth2
+  flows:
+    authorizationCode:
+      authorizationUrl: /v1/auth/github
+      tokenUrl: /v1/auth/github/callback
+      scopes:
+        read:profile: Read the user's GitHub profile
+        repo: Access repositories for Notes syncing (BR-006, BR-010)

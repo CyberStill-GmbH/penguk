@@ -1,0 +1,37 @@
+listProblems:
+  get:
+    tags: [Problems]
+    summary: List Problems from the shared catalog (read-only, populated by sync)
+    parameters:
+      - $ref: '../components/parameters.yaml#/LimitParam'
+      - $ref: '../components/parameters.yaml#/OffsetParam'
+      - $ref: '../components/parameters.yaml#/PlatformFilterParam'
+      - $ref: '../components/parameters.yaml#/TagsFilterParam'
+      - $ref: '../components/parameters.yaml#/DifficultyFilterParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items: { $ref: '../components/schemas.yaml#/Problem' }
+                pagination: { $ref: '../components/schemas.yaml#/Pagination' }
+
+getProblem:
+  get:
+    tags: [Problems]
+    summary: Get a single Problem
+    parameters:
+      - $ref: '../components/parameters.yaml#/IdPathParam'
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema: { $ref: '../components/schemas.yaml#/Problem' }
+      '404':
+        $ref: '../components/responses.yaml#/NotFound'

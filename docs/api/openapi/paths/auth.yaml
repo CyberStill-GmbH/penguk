@@ -1,0 +1,99 @@
+register:
+  post:
+    tags: [Auth]
+    summary: Register with email and password
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [email, password]
+            properties:
+              email: { type: string, format: email }
+              password: { type: string, minLength: 8 }
+    responses:
+      '201':
+        description: User created and authenticated.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken: { type: string }
+                user: { $ref: '../components/schemas.yaml#/User' }
+      '422':
+        $ref: '../components/responses.yaml#/ValidationError'
+
+login:
+  post:
+    tags: [Auth]
+    summary: Authenticate with email and password
+    security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [email, password]
+            properties:
+              email: { type: string, format: email }
+              password: { type: string }
+    responses:
+      '200':
+        description: Authenticated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken: { type: string }
+                user: { $ref: '../components/schemas.yaml#/User' }
+      '401':
+        $ref: '../components/responses.yaml#/Unauthorized'
+      '429':
+        $ref: '../components/responses.yaml#/RateLimited'
+
+githubRedirect:
+  get:
+    tags: [Auth]
+    summary: Start the GitHub OAuth flow
+    security: []
+    responses:
+      '302':
+        description: Redirects to GitHub's authorization page.
+
+githubCallback:
+  get:
+    tags: [Auth]
+    summary: GitHub OAuth callback
+    security: []
+    parameters:
+      - name: code
+        in: query
+        required: true
+        schema: { type: string }
+    responses:
+      '200':
+        description: Authenticated successfully (creates the User on first login, FR-001).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken: { type: string }
+                user: { $ref: '../components/schemas.yaml#/User' }
+      '503':
+        $ref: '../components/responses.yaml#/UpstreamUnavailable'
+
+logout:
+  post:
+    tags: [Auth]
+    summary: Invalidate the current access token
+    responses:
+      '204':
+        description: Logged out successfully.
+      '401':
+        $ref: '../components/responses.yaml#/Unauthorized'
