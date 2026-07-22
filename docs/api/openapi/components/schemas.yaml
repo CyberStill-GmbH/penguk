@@ -75,7 +75,7 @@ Problem:
     difficulty: { type: integer }
     tags:
       type: array
-      items: { $ref: '#/Tag' }
+      items: { $ref: "#/Tag" }
 
 ProblemReview:
   type: object

@@ -3,13 +3,13 @@ getMe:
     tags: [Users]
     summary: Get the authenticated user's profile
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/User' }
-      '401':
-        $ref: '../components/responses.yaml#/Unauthorized'
+            schema: { $ref: "../components/schemas.yaml#/User" }
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
 
 updateMe:
   patch:
@@ -29,30 +29,30 @@ updateMe:
                   timezone: { type: string }
                   language: { type: string }
     responses:
-      '200':
+      "200":
         description: Updated.
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/User' }
-      '422':
-        $ref: '../components/responses.yaml#/ValidationError'
+            schema: { $ref: "../components/schemas.yaml#/User" }
+      "422":
+        $ref: "../components/responses.yaml#/ValidationError"
 
 deleteMe:
   delete:
     tags: [Users]
     summary: Permanently delete the account and all associated data (BR-008)
     responses:
-      '204':
+      "204":
         description: Deleted. All Accounts, Integrations, Problem Reviews, Upsolves, and Note references are removed.
-      '401':
-        $ref: '../components/responses.yaml#/Unauthorized'
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
 
 exportMe:
   post:
     tags: [Users]
     summary: Request a data export (BR-008)
     responses:
-      '202':
+      "202":
         description: Export requested; a download link will be made available.
         content:
           application/json:
@@ -67,13 +67,13 @@ getRepository:
     tags: [Users]
     summary: Get the connected Repository, if any (BR-010)
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/Repository' }
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
+            schema: { $ref: "../components/schemas.yaml#/Repository" }
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
 
 setRepository:
   put:
@@ -90,23 +90,23 @@ setRepository:
               type: { type: string, enum: [git, obsidian, notion] }
               url: { type: string, description: Required when type is "git". }
     responses:
-      '200':
+      "200":
         description: >
           Repository connected. If type is "git" and the repository does
           not exist, it is created automatically. Any previously connected
           Repository is disconnected first.
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/Repository' }
-      '422':
-        $ref: '../components/responses.yaml#/ValidationError'
+            schema: { $ref: "../components/schemas.yaml#/Repository" }
+      "422":
+        $ref: "../components/responses.yaml#/ValidationError"
 
 deleteRepository:
   delete:
     tags: [Users]
     summary: Disconnect the current Repository
     responses:
-      '204':
+      "204":
         description: Disconnected.
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"

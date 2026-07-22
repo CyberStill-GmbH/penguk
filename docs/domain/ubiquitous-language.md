@@ -39,6 +39,7 @@ to derive Upsolves.
 A competitive programming problem from an external platform, shared across all users.
 
 A Problem contains:
+
 - Platform
 - Difficulty
 - Tags
@@ -88,6 +89,7 @@ The process of importing external platform data into Penguk.
 An algorithmic concept associated with Problems.
 
 Examples:
+
 - Dynamic Programming
 - Graphs
 - Greedy

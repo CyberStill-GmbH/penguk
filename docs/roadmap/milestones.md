@@ -18,17 +18,17 @@ Scrum-lite, adapted for a solo developer:
 
 ## Version Plan
 
-| Version | Scope | Sprints | Target Date |
-|---|---|---|---|
-| `v0.1.0` | Project foundation (no user-facing feature yet) | Sprint 0 | Jul 23, 2026 |
-| `v0.2.0` | Auth (FR-001, FR-002) | Sprint 1 | Jul 30, 2026 |
-| `v0.3.0` | Integrations: GitHub repo + platform connections (FR-003, FR-004) | Sprint 2 | Aug 6, 2026 |
-| `v0.4.0` | Problems sync & dedup (FR-005) | Sprint 3 | Aug 13, 2026 |
-| `v0.5.0` | Notes (FR-006) | Sprint 4 | Aug 20, 2026 |
-| `v0.6.0` | Spaced Repetition + Review Queue (FR-007, FR-008) | Sprint 5 | Aug 27, 2026 |
-| `v0.7.0` | Dashboard & Statistics (FR-009, FR-010) | Sprint 6 | Sep 3, 2026 |
-| `v0.8.0` | Contests & Upsolving (FR-011) | Sprint 7 | Sep 10, 2026 |
-| `v1.0.0` | Hardening, deploy, docs freeze — **MVP complete** | Sprint 8 | Sep 17, 2026 |
+| Version  | Scope                                                             | Sprints  | Target Date  |
+| -------- | ----------------------------------------------------------------- | -------- | ------------ |
+| `v0.1.0` | Project foundation (no user-facing feature yet)                   | Sprint 0 | Jul 23, 2026 |
+| `v0.2.0` | Auth (FR-001, FR-002)                                             | Sprint 1 | Jul 30, 2026 |
+| `v0.3.0` | Integrations: GitHub repo + platform connections (FR-003, FR-004) | Sprint 2 | Aug 6, 2026  |
+| `v0.4.0` | Problems sync & dedup (FR-005)                                    | Sprint 3 | Aug 13, 2026 |
+| `v0.5.0` | Notes (FR-006)                                                    | Sprint 4 | Aug 20, 2026 |
+| `v0.6.0` | Spaced Repetition + Review Queue (FR-007, FR-008)                 | Sprint 5 | Aug 27, 2026 |
+| `v0.7.0` | Dashboard & Statistics (FR-009, FR-010)                           | Sprint 6 | Sep 3, 2026  |
+| `v0.8.0` | Contests & Upsolving (FR-011)                                     | Sprint 7 | Sep 10, 2026 |
+| `v1.0.0` | Hardening, deploy, docs freeze — **MVP complete**                 | Sprint 8 | Sep 17, 2026 |
 
 Total: **9 sprints (~54 working days, ~9 weeks)** from Jul 17 to Sep 17, 2026.
 
