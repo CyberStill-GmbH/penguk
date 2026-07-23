@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 // auth.service.spec.ts
 import { Test, TestingModule } from "@nestjs/testing";
 import { UnauthorizedException } from "@nestjs/common";
@@ -8,37 +9,27 @@ import { PrismaService } from "../prisma/prisma.service";
 
 describe("AuthService", () => {
   let service: AuthService;
-  let prisma: {
-    refreshToken: {
-      findUnique: jest.Mock;
-      update: jest.Mock;
-      updateMany: jest.Mock;
-      create: jest.Mock;
-    };
-  };
-  let jwt: { verifyAsync: jest.Mock; signAsync: jest.Mock };
+  let prisma: any;
+  let jwt: any;
 
   beforeEach(async () => {
     prisma = {
       refreshToken: {
-        findUnique: jest.fn(),
-        update: jest.fn(),
-        updateMany: jest.fn(),
-        create: jest.fn(),
+        findUnique: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn(),
+        create: vi.fn(),
       },
     };
     jwt = {
-      verifyAsync: jest.fn(),
-      signAsync: jest.fn(),
+      verifyAsync: vi.fn(),
+      signAsync: vi.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        {
-          provide: UsersService,
-          useValue: { validateCredentials: jest.fn(), findOne: jest.fn() },
-        },
+        { provide: UsersService, useValue: { validateCredentials: vi.fn(), findOne: vi.fn() } },
         { provide: JwtService, useValue: jwt },
         { provide: PrismaService, useValue: prisma },
       ],
@@ -56,9 +47,7 @@ describe("AuthService", () => {
       jwt.verifyAsync.mockResolvedValue({ sub: "user-1", jti: "jti-1" });
       prisma.refreshToken.findUnique.mockResolvedValue(null);
 
-      await expect(service.refresh("fake-token")).rejects.toThrow(
-        UnauthorizedException,
-      );
+      await expect(service.refresh("fake-token")).rejects.toThrow(UnauthorizedException);
     });
   });
 });

@@ -1,0 +1,357 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Platform {
+  Codeforces
+  Leetcode
+}
+
+enum IntegrationStatus {
+  Connected
+  Syncing
+  Error
+}
+
+enum ReviewStatus {
+  Pending
+  Completed
+  Failed
+}
+
+enum ReviewResult {
+  Remembered
+  Forgotten
+  Snoozed
+}
+
+enum UpsolveStatus {
+  Pending
+  Completed
+}
+
+enum AuthProvider {
+  GitHub
+}
+
+enum RepositoryType {
+  GitHub
+  Local
+}
+
+model AuthAccount {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provider          AuthProvider
+  providerAccountId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  username String
+
+  email String @unique
+
+  passwordHash String?
+
+  preferences Json
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+
+  accounts Account[]
+
+  repository Repository?
+
+  problemReviews ProblemReview[]
+
+  contestParticipations ContestParticipation[]
+
+  upsolves Upsolve[]
+
+  authAccounts AuthAccount[]
+}
+
+model RefreshToken {
+  id String @id @default(uuid()) @db.Uuid
+
+  jti String @unique
+
+  tokenHash String
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  revokedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Account {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+
+  user User @relation(fields: [userId], references: [id])
+
+  platform Platform
+
+  handle String
+
+  createdAt DateTime @default(now())
+
+  integration Integration?
+
+  @@unique([userId, platform])
+  @@index([userId])
+}
+
+model Integration {
+  id String @id @default(uuid()) @db.Uuid
+
+  accountId String @unique @db.Uuid
+
+  account Account @relation(fields: [accountId], references: [id])
+
+  status IntegrationStatus
+
+  lastSync DateTime
+
+  lastError String?
+
+  updatedAt DateTime @updatedAt
+}
+
+model Problem {
+  id         String   @id @default(uuid()) @db.Uuid
+  externalId String
+  platform   Platform
+  title      String
+
+  // Kept as free text per erd.md: LeetCode reports Easy/Medium/Hard while
+  // Codeforces reports a numeric rating (800-3500) — storing the raw
+  // platform value avoids forcing an arbitrary mapping between the two.
+  // If a normalized numeric difficulty is needed later (e.g. for sorting
+  // across platforms), add a separate `difficultyRating Int?` field
+  // instead of overloading this one.
+  difficulty String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  problemTags           ProblemTag[]
+  problemReviews        ProblemReview[]
+  contestProblems       ContestProblem[]
+  contestSolvedProblems ContestSolvedProblem[]
+  upsolves              Upsolve[]
+  notes                 Note[]
+
+  // Enforces BR-004 (problem dedup): a problem is unique per platform,
+  // identified by the platform's own external id. Sync jobs must upsert
+  // against this constraint, never insert-blind.
+  @@unique([externalId, platform])
+}
+
+model Tag {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+
+  problemTags ProblemTag[]
+}
+
+model ProblemTag {
+  problemId String  @db.Uuid
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  tagId String @db.Uuid
+  tag   Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([problemId, tagId])
+}
+
+model ProblemReview {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  problemId String  @db.Uuid
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  nextReviewDate DateTime @db.Date
+
+  intervalDays   Int
+  retentionLevel Int
+
+  status            ReviewStatus
+  solutionReference String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews  Review[]
+  upsolves Upsolve[]
+
+  @@index([userId])
+  @@index([problemId])
+  @@index([nextReviewDate])
+}
+
+model Review {
+  id String @id @default(uuid()) @db.Uuid
+
+  problemReviewId String        @db.Uuid
+  problemReview   ProblemReview @relation(fields: [problemReviewId], references: [id])
+
+  result ReviewResult
+
+  reviewedAt DateTime
+
+  @@index([problemReviewId])
+}
+
+model Contest {
+  id String @id @default(uuid()) @db.Uuid
+
+  externalId String
+  platform   Platform
+
+  // Full start/end timestamps (not just a date) per erd.md — required for
+  // the unified contest calendar (FR-011) to show exact times, not just days.
+  startTime DateTime
+  endTime   DateTime
+
+  contestProblems       ContestProblem[]
+  contestParticipations ContestParticipation[]
+  upsolves              Upsolve[]
+
+  @@unique([externalId, platform])
+}
+
+model ContestProblem {
+  contestId String  @db.Uuid
+  contest   Contest @relation(fields: [contestId], references: [id])
+
+  problemId String  @db.Uuid
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  position Int
+
+  @@id([contestId, problemId])
+}
+
+model ContestParticipation {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  contestId String  @db.Uuid
+  contest   Contest @relation(fields: [contestId], references: [id])
+
+  rank         Int
+  ratingChange Int
+
+  createdAt DateTime @default(now())
+
+  contestSolvedProblems ContestSolvedProblem[]
+
+  @@unique([userId, contestId])
+  @@index([userId])
+  @@index([contestId])
+}
+
+model ContestSolvedProblem {
+  contestParticipationId String               @db.Uuid
+  contestParticipation   ContestParticipation @relation(fields: [contestParticipationId], references: [id])
+
+  problemId String  @db.Uuid
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  @@id([contestParticipationId, problemId])
+}
+
+model Upsolve {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  contestId String  @db.Uuid
+  contest   Contest @relation(fields: [contestId], references: [id])
+
+  problemId String  @db.Uuid
+  problem   Problem @relation(fields: [problemId], references: [id])
+
+  problemReviewId String?        @db.Uuid
+  problemReview   ProblemReview? @relation(fields: [problemReviewId], references: [id])
+
+  status UpsolveStatus
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, contestId, problemId])
+  @@index([userId])
+  @@index([contestId])
+}
+
+model Repository {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+
+  type RepositoryType
+  url  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes Note[]
+}
+
+model Note {
+  id String @id @default(uuid()) @db.Uuid
+
+  repositoryId String     @db.Uuid
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+
+  problemId String?  @db.Uuid
+  problem   Problem? @relation(fields: [problemId], references: [id])
+
+  path    String
+  content String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([repositoryId])
+  @@index([problemId])
+}
