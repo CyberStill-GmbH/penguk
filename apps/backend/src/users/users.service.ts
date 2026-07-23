@@ -31,4 +31,51 @@ export class UsersService {
 
     return valid ? user : null;
   }
+
+  async findOrCreateFromOAuth(data: {
+    provider: "GitHub";
+    providerAccountId: string;
+    email: string;
+    username: string;
+  }) {
+    const authAccount = await this.db.authAccount.findUnique({
+      where: {
+        provider_providerAccountId: {
+          provider: data.provider,
+          providerAccountId: data.providerAccountId,
+        },
+      },
+      include: { user: true },
+    });
+    if (authAccount) return authAccount.user;
+
+    const existingUser = await this.db.user.findUnique({
+      where: { email: data.email },
+    });
+
+    if (existingUser) {
+      await this.db.authAccount.create({
+        data: {
+          provider: data.provider,
+          providerAccountId: data.providerAccountId,
+          userId: existingUser.id,
+        },
+      });
+      return existingUser;
+    }
+
+    return this.db.user.create({
+      data: {
+        email: data.email,
+        username: data.username,
+        preferences: {},
+        authAccounts: {
+          create: {
+            provider: data.provider,
+            providerAccountId: data.providerAccountId,
+          },
+        },
+      },
+    });
+  }
 }

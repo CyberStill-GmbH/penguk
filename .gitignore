@@ -142,5 +142,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-# Ignore generated prisma files
-**/generated/prisma
+# Ignore the prisma client
+/generated/prisma
+/node_modules

@@ -2,10 +2,10 @@
 // npm install --save-dev prisma dotenv
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
-import * as process from "node:process";
+import * as process from 'node:process';
 
 if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is missing");
+    throw new Error("DATABASE_URL is missing");
 }
 
 export default defineConfig({

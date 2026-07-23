@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: penguk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-penguk}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-penguk}
+      POSTGRES_DB: ${POSTGRES_DB:-penguk}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - penguk_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-penguk}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: penguk-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - penguk_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend is optional to run via Docker during local dev — most days you'll
+  # run `npm run start:dev` directly in apps/backend for fast hot-reload, and
+  # only use this service to verify the container build itself, or in CI.
+  # Start it explicitly with: docker compose --profile full up
+  backend:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: penguk-backend
+    restart: unless-stopped
+    profiles: ["full"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-penguk}:${POSTGRES_PASSWORD:-penguk}@postgres:5432/${POSTGRES_DB:-penguk}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      NODE_ENV: development
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/backend:/app
+      - /app/node_modules
+
+volumes:
+  penguk_postgres_data:
+  penguk_redis_data:
