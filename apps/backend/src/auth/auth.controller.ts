@@ -1,9 +1,10 @@
-import { Controller, Post, Body, Res, Req } from "@nestjs/common";
+import { Controller, Post, Body, Res, Req, Get, Query } from "@nestjs/common";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "./dto/login.dto";
 import { RegisterUserDto } from "./dto/register.dto";
 import { Throttle } from "@nestjs/throttler";
+import { GithubOauthService } from "./github-oauth.service";
 
 const REFRESH_COOKIE_OPTIONS = {
   httpOnly: true,
@@ -19,7 +20,10 @@ function getRefreshTokenFromCookies(req: Request): string | undefined {
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly githubOAuthService: GithubOauthService,
+  ) {}
 
   @Throttle({
     default: {
@@ -88,5 +92,26 @@ export class AuthController {
     return {
       access_token: tokens.accessToken,
     };
+  }
+
+  @Get("github")
+  async githubAuth(@Res() res: Response) {
+    const url = await this.githubOAuthService.createAuthUrl();
+    return res.redirect(url);
+  }
+
+  @Get("github/callback")
+  async githubCallback(
+    @Query("code") code: string,
+    @Query("state") state: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const tokens = await this.githubOAuthService.handleCallback(code, state);
+
+    res.cookie("refresh_token", tokens.refresh_token, REFRESH_COOKIE_OPTIONS);
+
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/auth/success?token=${tokens.access_token}`,
+    );
   }
 }
