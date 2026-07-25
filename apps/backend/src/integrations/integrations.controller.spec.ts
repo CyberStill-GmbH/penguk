@@ -37,7 +37,7 @@ describe("IntegrationsController", () => {
   });
 
   describe("connect", () => {
-    it("should call integrationService.connectIntegration with correct parameters", async () => {
+    it("should call integrationService.connectIntegration with correct parameters", () => {
       const req = { user: { userId: "user-123", email: "test@example.com" } };
       const dto = { platform: Platform.Codeforces, handle: "testuser" };
       const mockResult = {
@@ -47,11 +47,9 @@ describe("IntegrationsController", () => {
         handle: "testuser",
       };
 
-      vi.spyOn(service, "connectIntegration").mockResolvedValue(
-        mockResult as any,
-      );
+      vi.spyOn(service, "connectIntegration").mockReturnValue(mockResult);
 
-      const result = await controller.connect(req as any, dto);
+      const result = controller.connect(req as any, dto);
 
       expect(service.connectIntegration).toHaveBeenCalledWith(
         "user-123",
@@ -63,7 +61,7 @@ describe("IntegrationsController", () => {
   });
 
   describe("sync", () => {
-    it("should call integrationService.triggerSync with correct parameters", async () => {
+    it("should call integrationService.triggerSync with correct parameters", () => {
       const integrationId = "int-456";
       const mockResult = {
         id: "int-456",
@@ -71,9 +69,9 @@ describe("IntegrationsController", () => {
         lastSync: new Date(),
       };
 
-      vi.spyOn(service, "triggerSync").mockResolvedValue(mockResult as any);
+      vi.spyOn(service, "triggerSync").mockReturnValue(mockResult);
 
-      const result = await controller.sync(integrationId);
+      const result = controller.sync(integrationId);
 
       expect(service.triggerSync).toHaveBeenCalledWith("int-456");
       expect(result).toEqual(mockResult);
