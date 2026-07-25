@@ -1,4 +1,4 @@
 export interface RequestUser {
-    userId: string;
-    email: string;
+  userId: string;
+  email: string;
 }
