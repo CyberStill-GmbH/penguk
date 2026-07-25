@@ -1,16 +1,16 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { IntegrationsController } from "./integrations.controller";
-import { IntegrationService } from "./integrations.service";
+import { IntegrationsService } from "./integrations.service";
 import { Platform } from "../../generated/prisma";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 
 describe("IntegrationsController", () => {
   let controller: IntegrationsController;
-  let service: IntegrationService;
+  let service: IntegrationsService;
 
   beforeEach(async () => {
-    const mockIntegrationService = {
+    const mockIntegrationsService = {
       connectIntegration: vi.fn(),
       triggerSync: vi.fn(),
     };
@@ -19,8 +19,8 @@ describe("IntegrationsController", () => {
       controllers: [IntegrationsController],
       providers: [
         {
-          provide: IntegrationService,
-          useValue: mockIntegrationService,
+          provide: IntegrationsService,
+          useValue: mockIntegrationsService,
         },
       ],
     })
@@ -29,7 +29,7 @@ describe("IntegrationsController", () => {
       .compile();
 
     controller = module.get<IntegrationsController>(IntegrationsController);
-    service = module.get<IntegrationService>(IntegrationService);
+    service = module.get<IntegrationsService>(IntegrationsService);
   });
 
   it("should be defined", () => {
