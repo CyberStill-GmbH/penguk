@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 // auth.service.spec.ts
 import { Test, TestingModule } from "@nestjs/testing";
 import { UnauthorizedException } from "@nestjs/common";
@@ -29,7 +29,10 @@ describe("AuthService", () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: UsersService, useValue: { validateCredentials: vi.fn(), findOne: vi.fn() } },
+        {
+          provide: UsersService,
+          useValue: { validateCredentials: vi.fn(), findOne: vi.fn() },
+        },
         { provide: JwtService, useValue: jwt },
         { provide: PrismaService, useValue: prisma },
       ],
@@ -47,7 +50,9 @@ describe("AuthService", () => {
       jwt.verifyAsync.mockResolvedValue({ sub: "user-1", jti: "jti-1" });
       prisma.refreshToken.findUnique.mockResolvedValue(null);
 
-      await expect(service.refresh("fake-token")).rejects.toThrow(UnauthorizedException);
+      await expect(service.refresh("fake-token")).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

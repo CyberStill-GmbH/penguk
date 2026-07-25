@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { vi } from "vitest";
 // auth.controller.spec.ts
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthController } from "./auth.controller";
@@ -22,7 +22,10 @@ describe("AuthController", () => {
       controllers: [AuthController],
       providers: [
         { provide: AuthService, useValue: authService },
-        { provide: GithubOauthService, useValue: { createAuthUrl: vi.fn(), handleCallback: vi.fn() } },
+        {
+          provide: GithubOauthService,
+          useValue: { createAuthUrl: vi.fn(), handleCallback: vi.fn() },
+        },
       ],
     }).compile();
 
