@@ -65,12 +65,25 @@ export class NotesService {
     });
   }
 
+  async update(userId: string, id: string, dto: updateNoteDto) {
+    const note = await this.prisma.note.findFirst({
+      where: { id, repository: { userId } },
+    });
+    if (!note) {
+      throw new NotFoundException("Nota no encontrada");
+    }
+    return this.prisma.note.update({
+      where: { id },
+      data: { content: dto.content },
+    });
+  }
+
   async remove(userId: string, id: string) {
     const note = await this.prisma.note.findFirst({
       where: { id, repository: { userId } },
     });
     if (!note) {
-      throw new NotFoundException('Nota no encontrada');
+      throw new NotFoundException("Nota no encontrada");
     }
     return this.prisma.note.delete({ where: { id } });
   }
