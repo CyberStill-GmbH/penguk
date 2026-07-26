@@ -47,7 +47,7 @@ describe("NotesController", () => {
     const req = { user: { userId: "u1", email: "a@b.c" } } as any;
     const dto: createNoteDto = { problemId: "p1", content: "c" };
     const created = { id: "n1" } as any;
-    vi.spyOn(service, "create").mockReturnValue(created as any);
+    vi.spyOn(service, "create").mockReturnValue(created);
     expect(controller.create(req, dto)).toBe(created);
     expect(service.create).toHaveBeenCalledWith("u1", dto);
   });
@@ -56,16 +56,16 @@ describe("NotesController", () => {
     const req = { user: { userId: "u1", email: "a@b.c" } } as any;
     const dto: updateNoteDto = { content: "new" };
     const updated = { id: "n1" } as any;
-    vi.spyOn(service, "update").mockReturnValue(updated as any);
+    vi.spyOn(service, "update").mockReturnValue(updated);
     expect(controller.update(req, "n1", dto)).toBe(updated);
     expect(service.update).toHaveBeenCalledWith("u1", "n1", dto);
   });
 
-    it("remove", async () => {
-      const req = { user: { userId: "u1", email: "a@b.c" } } as any;
-      const removed = { id: "n1" } as any;
-      vi.spyOn(service, "remove").mockResolvedValue(removed as any);
-      expect(await controller.remove(req, "n1")).toBe(removed);
-      expect(service.remove).toHaveBeenCalledWith("u1", "n1");
-    });
+  it("remove", async () => {
+    const req = { user: { userId: "u1", email: "a@b.c" } } as any;
+    const removed = { id: "n1" } as any;
+    vi.spyOn(service, "remove").mockResolvedValue(removed);
+    expect(await controller.remove(req, "n1")).toBe(removed);
+    expect(service.remove).toHaveBeenCalledWith("u1", "n1");
+  });
 });
