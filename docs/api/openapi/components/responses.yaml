@@ -3,35 +3,35 @@ NotFound:
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 Unauthorized:
   description: Missing, invalid, or expired access token.
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 Forbidden:
   description: Authenticated, but not allowed to access this resource.
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 Conflict:
   description: The request conflicts with the current state of the resource.
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 ValidationError:
   description: The request is well-formed but fails validation or a business rule.
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 RateLimited:
   description: Too many requests; retry after the interval in the Retry-After header.
@@ -42,11 +42,11 @@ RateLimited:
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"
 
 UpstreamUnavailable:
   description: A dependent external platform is unreachable; safe to retry with backoff.
   content:
     application/json:
       schema:
-        $ref: './schemas.yaml#/Error'
+        $ref: "./schemas.yaml#/Error"

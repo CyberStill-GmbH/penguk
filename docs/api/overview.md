@@ -18,16 +18,16 @@ introduced as `/v2`, never as an in-place change to `/v1`.
 
 ## Resource Map
 
-| Resource | Domain Entities | Docs |
-|---|---|---|
-| Auth | User, Account (session) | [`openapi/paths/auth.yaml`](./openapi/paths/auth.yaml) |
-| Users | User, Repository | [`openapi/paths/users.yaml`](./openapi/paths/users.yaml) |
-| Integrations | Account, Integration | [`openapi/paths/integrations.yaml`](./openapi/paths/integrations.yaml) |
-| Problems | Problem, Tag | [`openapi/paths/problems.yaml`](./openapi/paths/problems.yaml) |
-| Reviews | Problem Review, Review | [`openapi/paths/reviews.yaml`](./openapi/paths/reviews.yaml) |
-| Notes | Note, Repository | [`openapi/paths/notes.yaml`](./openapi/paths/notes.yaml) |
-| Contests | Contest, Contest Participation, Upsolve | [`openapi/paths/contests.yaml`](./openapi/paths/contests.yaml) |
-| Dashboard | Aggregated read views | [`openapi/paths/dashboard.yaml`](./openapi/paths/dashboard.yaml) |
+| Resource     | Domain Entities                         | Docs                                                                   |
+| ------------ | --------------------------------------- | ---------------------------------------------------------------------- |
+| Auth         | User, Account (session)                 | [`openapi/paths/auth.yaml`](./openapi/paths/auth.yaml)                 |
+| Users        | User, Repository                        | [`openapi/paths/users.yaml`](./openapi/paths/users.yaml)               |
+| Integrations | Account, Integration                    | [`openapi/paths/integrations.yaml`](./openapi/paths/integrations.yaml) |
+| Problems     | Problem, Tag                            | [`openapi/paths/problems.yaml`](./openapi/paths/problems.yaml)         |
+| Reviews      | Problem Review, Review                  | [`openapi/paths/reviews.yaml`](./openapi/paths/reviews.yaml)           |
+| Notes        | Note, Repository                        | [`openapi/paths/notes.yaml`](./openapi/paths/notes.yaml)               |
+| Contests     | Contest, Contest Participation, Upsolve | [`openapi/paths/contests.yaml`](./openapi/paths/contests.yaml)         |
+| Dashboard    | Aggregated read views                   | [`openapi/paths/dashboard.yaml`](./openapi/paths/dashboard.yaml)       |
 
 ## Read This Next
 

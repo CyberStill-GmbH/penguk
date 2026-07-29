@@ -14,13 +14,13 @@ Penguk centralizes your solved problems, keeps your notes in your own GitHub rep
 
 ## Tech Stack
 
-| Layer | Stack |
-|---|---|
-| Backend | NestJS, TypeScript, Prisma, PostgreSQL |
-| Queue / Background Jobs | Redis, BullMQ |
-| Frontend | Next.js, TypeScript, Tailwind CSS, shadcn/ui |
-| Auth | GitHub OAuth, JWT |
-| API | REST, documented with OpenAPI |
+| Layer                   | Stack                                        |
+| ----------------------- | -------------------------------------------- |
+| Backend                 | NestJS, TypeScript, Prisma, PostgreSQL       |
+| Queue / Background Jobs | Redis, BullMQ                                |
+| Frontend                | Next.js, TypeScript, Tailwind CSS, shadcn/ui |
+| Auth                    | GitHub OAuth, JWT                            |
+| API                     | REST, documented with OpenAPI                |
 
 Every technical decision is documented as an ADR — see [`docs/architecture/adrs/`](docs/architecture/adrs/).
 

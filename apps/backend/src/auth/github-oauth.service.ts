@@ -121,6 +121,7 @@ export class GithubOauthService {
       providerAccountId: String(profile.id),
       email,
       username: profile.login,
+      accessToken: tokenData.access_token,
     });
 
     return this.authService.login({ id: user.id, email: user.email });

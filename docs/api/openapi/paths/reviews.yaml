@@ -3,7 +3,7 @@ listProblemReviews:
     tags: [Reviews]
     summary: List the user's Problem Reviews, grouped for the Review Queue (FR-008)
     parameters:
-      - $ref: '../components/parameters.yaml#/ReviewStatusFilterParam'
+      - $ref: "../components/parameters.yaml#/ReviewStatusFilterParam"
       - name: due
         in: query
         required: false
@@ -11,10 +11,10 @@ listProblemReviews:
           type: string
           enum: [overdue, today, tomorrow, this-week]
         description: Groups matching the Review Queue buckets defined in FR-008.
-      - $ref: '../components/parameters.yaml#/LimitParam'
-      - $ref: '../components/parameters.yaml#/OffsetParam'
+      - $ref: "../components/parameters.yaml#/LimitParam"
+      - $ref: "../components/parameters.yaml#/OffsetParam"
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
@@ -23,37 +23,37 @@ listProblemReviews:
               properties:
                 data:
                   type: array
-                  items: { $ref: '../components/schemas.yaml#/ProblemReview' }
-                pagination: { $ref: '../components/schemas.yaml#/Pagination' }
+                  items: { $ref: "../components/schemas.yaml#/ProblemReview" }
+                pagination: { $ref: "../components/schemas.yaml#/Pagination" }
 
 getProblemReview:
   get:
     tags: [Reviews]
     summary: Get a single Problem Review, including its Review history
     parameters:
-      - $ref: '../components/parameters.yaml#/IdPathParam'
+      - $ref: "../components/parameters.yaml#/IdPathParam"
     responses:
-      '200':
+      "200":
         description: OK
         content:
           application/json:
             schema:
               allOf:
-                - $ref: '../components/schemas.yaml#/ProblemReview'
+                - $ref: "../components/schemas.yaml#/ProblemReview"
                 - type: object
                   properties:
                     history:
                       type: array
-                      items: { $ref: '../components/schemas.yaml#/Review' }
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
+                      items: { $ref: "../components/schemas.yaml#/Review" }
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
 
 logReview:
   post:
     tags: [Reviews]
     summary: Log a review outcome, updating the schedule (BR-002, BR-003)
     parameters:
-      - $ref: '../components/parameters.yaml#/IdPathParam'
+      - $ref: "../components/parameters.yaml#/IdPathParam"
     requestBody:
       required: true
       content:
@@ -64,23 +64,23 @@ logReview:
             properties:
               result: { type: string, enum: [success, failed] }
     responses:
-      '201':
+      "201":
         description: >
           Review logged. On success, interval increases; on failure,
           retention level decreases (BR-003). nextReviewDate is never set
           before the last recorded review (BR-002).
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/ProblemReview' }
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
+            schema: { $ref: "../components/schemas.yaml#/ProblemReview" }
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
 
 updateProblemReview:
   patch:
     tags: [Reviews]
     summary: Postpone or reset a Problem Review's schedule
     parameters:
-      - $ref: '../components/parameters.yaml#/IdPathParam'
+      - $ref: "../components/parameters.yaml#/IdPathParam"
     requestBody:
       required: true
       content:
@@ -94,15 +94,15 @@ updateProblemReview:
                 format: date
                 description: Required when action is "postpone".
     responses:
-      '200':
+      "200":
         description: >
           Updated. "postpone" changes nextReviewDate without logging a
           Review event; "reset" returns interval and retentionLevel to
           their base state.
         content:
           application/json:
-            schema: { $ref: '../components/schemas.yaml#/ProblemReview' }
-      '404':
-        $ref: '../components/responses.yaml#/NotFound'
-      '422':
-        $ref: '../components/responses.yaml#/ValidationError'
+            schema: { $ref: "../components/schemas.yaml#/ProblemReview" }
+      "404":
+        $ref: "../components/responses.yaml#/NotFound"
+      "422":
+        $ref: "../components/responses.yaml#/ValidationError"

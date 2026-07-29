@@ -14,7 +14,7 @@ register:
               email: { type: string, format: email }
               password: { type: string, minLength: 8 }
     responses:
-      '201':
+      "201":
         description: User created and authenticated.
         content:
           application/json:
@@ -22,9 +22,9 @@ register:
               type: object
               properties:
                 accessToken: { type: string }
-                user: { $ref: '../components/schemas.yaml#/User' }
-      '422':
-        $ref: '../components/responses.yaml#/ValidationError'
+                user: { $ref: "../components/schemas.yaml#/User" }
+      "422":
+        $ref: "../components/responses.yaml#/ValidationError"
 
 login:
   post:
@@ -42,7 +42,7 @@ login:
               email: { type: string, format: email }
               password: { type: string }
     responses:
-      '200':
+      "200":
         description: Authenticated successfully.
         content:
           application/json:
@@ -50,11 +50,11 @@ login:
               type: object
               properties:
                 accessToken: { type: string }
-                user: { $ref: '../components/schemas.yaml#/User' }
-      '401':
-        $ref: '../components/responses.yaml#/Unauthorized'
-      '429':
-        $ref: '../components/responses.yaml#/RateLimited'
+                user: { $ref: "../components/schemas.yaml#/User" }
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"
+      "429":
+        $ref: "../components/responses.yaml#/RateLimited"
 
 githubRedirect:
   get:
@@ -62,7 +62,7 @@ githubRedirect:
     summary: Start the GitHub OAuth flow
     security: []
     responses:
-      '302':
+      "302":
         description: Redirects to GitHub's authorization page.
 
 githubCallback:
@@ -76,7 +76,7 @@ githubCallback:
         required: true
         schema: { type: string }
     responses:
-      '200':
+      "200":
         description: Authenticated successfully (creates the User on first login, FR-001).
         content:
           application/json:
@@ -84,16 +84,16 @@ githubCallback:
               type: object
               properties:
                 accessToken: { type: string }
-                user: { $ref: '../components/schemas.yaml#/User' }
-      '503':
-        $ref: '../components/responses.yaml#/UpstreamUnavailable'
+                user: { $ref: "../components/schemas.yaml#/User" }
+      "503":
+        $ref: "../components/responses.yaml#/UpstreamUnavailable"
 
 logout:
   post:
     tags: [Auth]
     summary: Invalidate the current access token
     responses:
-      '204':
+      "204":
         description: Logged out successfully.
-      '401':
-        $ref: '../components/responses.yaml#/Unauthorized'
+      "401":
+        $ref: "../components/responses.yaml#/Unauthorized"

@@ -119,6 +119,7 @@ describe("GithubOauthService", () => {
         providerAccountId: "12345",
         email: "test@example.com",
         username: "testuser",
+        accessToken: "gh-token-123",
       });
       expect(mockAuthService.login).toHaveBeenCalledWith({
         id: 1,
@@ -167,6 +168,7 @@ describe("GithubOauthService", () => {
         providerAccountId: "12345",
         email: "primary@example.com",
         username: "testuser",
+        accessToken: "gh-token-123",
       });
     });
 

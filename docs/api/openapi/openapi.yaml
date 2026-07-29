@@ -28,100 +28,100 @@ tags:
 
 paths:
   /auth/register:
-    $ref: './paths/auth.yaml#/register'
+    $ref: "./paths/auth.yaml#/register"
   /auth/login:
-    $ref: './paths/auth.yaml#/login'
+    $ref: "./paths/auth.yaml#/login"
   /auth/github:
-    $ref: './paths/auth.yaml#/githubRedirect'
+    $ref: "./paths/auth.yaml#/githubRedirect"
   /auth/github/callback:
-    $ref: './paths/auth.yaml#/githubCallback'
+    $ref: "./paths/auth.yaml#/githubCallback"
   /auth/logout:
-    $ref: './paths/auth.yaml#/logout'
+    $ref: "./paths/auth.yaml#/logout"
 
   /users/me:
     get:
-      $ref: './paths/users.yaml#/getMe/get'
+      $ref: "./paths/users.yaml#/getMe/get"
     patch:
-      $ref: './paths/users.yaml#/updateMe/patch'
+      $ref: "./paths/users.yaml#/updateMe/patch"
     delete:
-      $ref: './paths/users.yaml#/deleteMe/delete'
+      $ref: "./paths/users.yaml#/deleteMe/delete"
   /users/me/export:
-    $ref: './paths/users.yaml#/exportMe'
+    $ref: "./paths/users.yaml#/exportMe"
   /users/me/repository:
     get:
-      $ref: './paths/users.yaml#/getRepository/get'
+      $ref: "./paths/users.yaml#/getRepository/get"
     put:
-      $ref: './paths/users.yaml#/setRepository/put'
+      $ref: "./paths/users.yaml#/setRepository/put"
     delete:
-      $ref: './paths/users.yaml#/deleteRepository/delete'
+      $ref: "./paths/users.yaml#/deleteRepository/delete"
 
   /integrations:
     get:
-      $ref: './paths/integrations.yaml#/listIntegrations/get'
+      $ref: "./paths/integrations.yaml#/listIntegrations/get"
     post:
-      $ref: './paths/integrations.yaml#/connectIntegration/post'
+      $ref: "./paths/integrations.yaml#/connectIntegration/post"
   /integrations/{id}:
     delete:
-      $ref: './paths/integrations.yaml#/disconnectIntegration/delete'
+      $ref: "./paths/integrations.yaml#/disconnectIntegration/delete"
   /integrations/{id}/sync:
     post:
-      $ref: './paths/integrations.yaml#/triggerSync/post'
+      $ref: "./paths/integrations.yaml#/triggerSync/post"
 
   /problems:
-    $ref: './paths/problems.yaml#/listProblems'
+    $ref: "./paths/problems.yaml#/listProblems"
   /problems/{id}:
-    $ref: './paths/problems.yaml#/getProblem'
+    $ref: "./paths/problems.yaml#/getProblem"
 
   /problem-reviews:
-    $ref: './paths/reviews.yaml#/listProblemReviews'
+    $ref: "./paths/reviews.yaml#/listProblemReviews"
   /problem-reviews/{id}:
     get:
-      $ref: './paths/reviews.yaml#/getProblemReview/get'
+      $ref: "./paths/reviews.yaml#/getProblemReview/get"
     patch:
-      $ref: './paths/reviews.yaml#/updateProblemReview/patch'
+      $ref: "./paths/reviews.yaml#/updateProblemReview/patch"
   /problem-reviews/{id}/review:
     post:
-      $ref: './paths/reviews.yaml#/logReview/post'
+      $ref: "./paths/reviews.yaml#/logReview/post"
 
   /notes:
     get:
-      $ref: './paths/notes.yaml#/listNotes/get'
+      $ref: "./paths/notes.yaml#/listNotes/get"
     post:
-      $ref: './paths/notes.yaml#/createNote/post'
+      $ref: "./paths/notes.yaml#/createNote/post"
   /notes/{id}:
     get:
-      $ref: './paths/notes.yaml#/getNote/get'
+      $ref: "./paths/notes.yaml#/getNote/get"
     patch:
-      $ref: './paths/notes.yaml#/updateNote/patch'
+      $ref: "./paths/notes.yaml#/updateNote/patch"
     delete:
-      $ref: './paths/notes.yaml#/deleteNote/delete'
+      $ref: "./paths/notes.yaml#/deleteNote/delete"
 
   /contests:
-    $ref: './paths/contests.yaml#/listContests'
+    $ref: "./paths/contests.yaml#/listContests"
   /contests/{id}:
-    $ref: './paths/contests.yaml#/getContest'
+    $ref: "./paths/contests.yaml#/getContest"
   /contests/{id}/participation:
-    $ref: './paths/contests.yaml#/getContestParticipation'
+    $ref: "./paths/contests.yaml#/getContestParticipation"
   /upsolves:
-    $ref: './paths/contests.yaml#/listUpsolves'
+    $ref: "./paths/contests.yaml#/listUpsolves"
   /upsolves/{id}:
     patch:
-      $ref: './paths/contests.yaml#/updateUpsolve/patch'
+      $ref: "./paths/contests.yaml#/updateUpsolve/patch"
 
   /dashboard:
-    $ref: './paths/dashboard.yaml#/getDashboard'
+    $ref: "./paths/dashboard.yaml#/getDashboard"
   /statistics:
-    $ref: './paths/dashboard.yaml#/getStatistics'
+    $ref: "./paths/dashboard.yaml#/getStatistics"
 
 components:
   securitySchemes:
     bearerAuth:
-      $ref: './components/security.yaml#/bearerAuth'
+      $ref: "./components/security.yaml#/bearerAuth"
     githubOAuth:
-      $ref: './components/security.yaml#/githubOAuth'
+      $ref: "./components/security.yaml#/githubOAuth"
   schemas:
-    $ref: './components/schemas.yaml'
+    $ref: "./components/schemas.yaml"
   parameters:
-    $ref: './components/parameters.yaml'
+    $ref: "./components/parameters.yaml"
   responses:
-    $ref: './components/responses.yaml'
+    $ref: "./components/responses.yaml"

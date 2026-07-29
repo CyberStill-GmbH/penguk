@@ -23,17 +23,17 @@ Every error response, regardless of status code, uses the same shape:
 
 ## Status Code Mapping
 
-| Status | Meaning | Example `code` |
-|---|---|---|
-| 400 | Malformed request (bad JSON, invalid query param) | `invalid_request` |
-| 401 | Missing, invalid, or expired token | `unauthorized`, `token_expired` |
-| 403 | Authenticated, but not allowed to access this resource | `forbidden` |
-| 404 | Resource does not exist | `not_found` |
-| 409 | Conflict with current state (e.g. Repository already connected, BR-010) | `conflict` |
-| 422 | Valid request shape, but fails a business rule | `validation_failed` |
-| 429 | Rate limit exceeded | `rate_limited` |
-| 500 | Unexpected server error | `internal_error` |
-| 503 | Dependent external service unavailable (e.g. platform sync down) | `upstream_unavailable` |
+| Status | Meaning                                                                 | Example `code`                  |
+| ------ | ----------------------------------------------------------------------- | ------------------------------- |
+| 400    | Malformed request (bad JSON, invalid query param)                       | `invalid_request`               |
+| 401    | Missing, invalid, or expired token                                      | `unauthorized`, `token_expired` |
+| 403    | Authenticated, but not allowed to access this resource                  | `forbidden`                     |
+| 404    | Resource does not exist                                                 | `not_found`                     |
+| 409    | Conflict with current state (e.g. Repository already connected, BR-010) | `conflict`                      |
+| 422    | Valid request shape, but fails a business rule                          | `validation_failed`             |
+| 429    | Rate limit exceeded                                                     | `rate_limited`                  |
+| 500    | Unexpected server error                                                 | `internal_error`                |
+| 503    | Dependent external service unavailable (e.g. platform sync down)        | `upstream_unavailable`          |
 
 ## Validation Errors (422)
 

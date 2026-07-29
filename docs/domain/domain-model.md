@@ -7,6 +7,7 @@
 Represents a person using Penguk.
 
 Attributes:
+
 - id
 - username
 - email
@@ -20,6 +21,7 @@ Belongs to the User aggregate — enforces BR-009 (max one per platform)
 as part of the same transaction that creates/deletes a User's accounts.
 
 Attributes:
+
 - id
 - userId
 - platform
@@ -33,6 +35,7 @@ Independent aggregate so background sync jobs can update it without
 touching the User aggregate at all.
 
 Attributes:
+
 - id
 - accountId
 - status
@@ -46,6 +49,7 @@ Attributes:
 Represents a competitive programming problem, shared across all users.
 
 Attributes:
+
 - id
 - externalId
 - title
@@ -61,6 +65,7 @@ Represents a User's personal tracking of a Problem: its schedule,
 history, and solution reference.
 
 Attributes:
+
 - id
 - userId
 - problemId
@@ -77,6 +82,7 @@ Attributes:
 Represents a single repetition attempt logged against a Problem Review.
 
 Attributes:
+
 - id
 - problemReviewId
 - result (success | failed)
@@ -89,6 +95,7 @@ Attributes:
 Represents a timed competitive programming event, shared across all users.
 
 Attributes:
+
 - id
 - externalId
 - platform
@@ -104,6 +111,7 @@ Contest and User so synchronization jobs can write to it without locking
 either aggregate.
 
 Attributes:
+
 - id
 - userId
 - contestId
@@ -119,6 +127,7 @@ A historical record of an obligatory upsolve derived from a Contest
 Participation, kept even after completion for analytics/mapping purposes.
 
 Attributes:
+
 - id
 - userId
 - contestId
@@ -133,6 +142,7 @@ Attributes:
 ## Repository (Entity, part of User aggregate)
 
 Attributes:
+
 - id
 - userId
 - type (git | obsidian | notion)
@@ -143,6 +153,7 @@ Attributes:
 ## Note (Entity, part of Repository aggregate)
 
 Attributes:
+
 - id
 - repositoryId
 - problemId (optional)

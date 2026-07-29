@@ -63,6 +63,7 @@ The MVP is considered complete when:
 - API documentation is available.
 
 **Product (after the MVP)**
+
 - Percentage of scheduled reviews that are actually completed (measures if the SRS is actually used, not just if it exists).
 
 - Average time between "issue resolved" and "note/upsolve recorded" (measures if the flow is sufficiently low friction).
@@ -70,6 +71,7 @@ The MVP is considered complete when:
 - 30-day retention: users who are still syncing data one month after signing up.
 
 **Engineering**
+
 - Background sync uptime (goal: minimize silent failures).
 
 - Dashboard response time with already synced data (perceived < 500ms).
