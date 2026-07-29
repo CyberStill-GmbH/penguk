@@ -1,6 +1,6 @@
 # Testing Strategy — Penguk
 
-Referenced by `development/coding-standards.md` and `development/definition-of-done.md`. This defines *how* testing works project-wide; `unit.md`, `integration.md`, and `e2e.md` will each expand their layer in detail as the sprint that needs them arrives — this file is what CI needs today.
+Referenced by `development/coding-standards.md` and `development/definition-of-done.md`. This defines _how_ testing works project-wide; `unit.md`, `integration.md`, and `e2e.md` will each expand their layer in detail as the sprint that needs them arrives — this file is what CI needs today.
 
 ## Tooling
 
@@ -10,11 +10,11 @@ Referenced by `development/coding-standards.md` and `development/definition-of-d
 
 ## Test Layers
 
-| Layer | Location | What it covers | Required for merge? |
-|---|---|---|---|
-| Unit | `*.spec.ts` co-located with source | `domain/` logic — SRS algorithm, dedup rules, any BR-xxx enforcement | Yes, for any new/changed domain logic |
-| Integration | `apps/api/test/` | Module boundaries, Prisma repositories, real DB reads/writes | Yes, for any new endpoint or sync job |
-| E2E | `apps/web/e2e/` (Playwright, added when frontend exists) | Full user workflows from `product/scope.md` (signup → sync → review) | Only at `v1.0.0` hardening (Sprint 8), not per-PR |
+| Layer       | Location                                                 | What it covers                                                       | Required for merge?                               |
+| ----------- | -------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------- |
+| Unit        | `*.spec.ts` co-located with source                       | `domain/` logic — SRS algorithm, dedup rules, any BR-xxx enforcement | Yes, for any new/changed domain logic             |
+| Integration | `apps/api/test/`                                         | Module boundaries, Prisma repositories, real DB reads/writes         | Yes, for any new endpoint or sync job             |
+| E2E         | `apps/web/e2e/` (Playwright, added when frontend exists) | Full user workflows from `product/scope.md` (signup → sync → review) | Only at `v1.0.0` hardening (Sprint 8), not per-PR |
 
 ## Coverage Expectations
 
