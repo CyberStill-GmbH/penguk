@@ -26,7 +26,9 @@ describe("GithubController", () => {
   });
 
   it("passes repository creation requests to the service", async () => {
-    await controller.createRepository(request as never, { name: "study-notes" });
+    await controller.createRepository(request as never, {
+      name: "study-notes",
+    });
 
     expect(githubService.createAndConnectRepository).toHaveBeenCalledWith(
       "user-id",
