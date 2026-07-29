@@ -12,18 +12,18 @@ don't just pick one silently.
 
 ## Start Here
 
-| I want to... | Go to |
-|---|---|
-| Understand what Penguk does and why | [`product/vision.md`](product/vision.md), [`product/scope.md`](product/scope.md) |
-| See what's in the MVP vs. later versions | [`product/scope.md`](product/scope.md), [`roadmap/v2.md`](roadmap/v2.md) |
-| Understand the system architecture | [`architecture/overview.md`](architecture/overview.md) |
-| See *why* a technical decision was made | [`architecture/adrs/`](architecture/adrs/) |
-| Set up my local environment and start coding | [`development/repository-structure.md`](development/repository-structure.md) |
-| Know the day-by-day build plan | [`roadmap/v1.md`](roadmap/v1.md), [`roadmap/milestones.md`](roadmap/milestones.md) |
-| Check coding/commit/branch conventions | [`development/`](development/) |
-| Know when something is "done" | [`development/definition-of-done.md`](development/definition-of-done.md) |
-| Look up an API endpoint | [`api/overview.md`](api/overview.md), [`api/openapi/openapi.yaml`](api/openapi/openapi.yaml) |
-| Understand a business rule (e.g. "why can't I connect 2 repos?") | [`domain/business-rules.md`](domain/business-rules.md) |
+| I want to...                                                     | Go to                                                                                        |
+| ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Understand what Penguk does and why                              | [`product/vision.md`](product/vision.md), [`product/scope.md`](product/scope.md)             |
+| See what's in the MVP vs. later versions                         | [`product/scope.md`](product/scope.md), [`roadmap/v2.md`](roadmap/v2.md)                     |
+| Understand the system architecture                               | [`architecture/overview.md`](architecture/overview.md)                                       |
+| See _why_ a technical decision was made                          | [`architecture/adrs/`](architecture/adrs/)                                                   |
+| Set up my local environment and start coding                     | [`development/repository-structure.md`](development/repository-structure.md)                 |
+| Know the day-by-day build plan                                   | [`roadmap/v1.md`](roadmap/v1.md), [`roadmap/milestones.md`](roadmap/milestones.md)           |
+| Check coding/commit/branch conventions                           | [`development/`](development/)                                                               |
+| Know when something is "done"                                    | [`development/definition-of-done.md`](development/definition-of-done.md)                     |
+| Look up an API endpoint                                          | [`api/overview.md`](api/overview.md), [`api/openapi/openapi.yaml`](api/openapi/openapi.yaml) |
+| Understand a business rule (e.g. "why can't I connect 2 repos?") | [`domain/business-rules.md`](domain/business-rules.md)                                       |
 
 ## Structure
 
@@ -64,7 +64,7 @@ deployment/     →  how it reaches production
 
 If you're proposing a change, trace it upward first: does it change a
 business rule (`domain/`) or a requirement (`requirements/`)? If so,
-update that *before* touching architecture or code — not after.
+update that _before_ touching architecture or code — not after.
 
 ## Traceability
 

@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -45,21 +43,24 @@ enum AuthProvider {
   GitHub
 }
 
-enum RepositoryType {
-  GitHub
-  Local
-}
-
 model AuthAccount {
   id String @id @default(uuid()) @db.Uuid
 
-  userId String @db.Uuid
+  userId String @unique @db.Uuid
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   provider          AuthProvider
   providerAccountId String
 
+  username String
+
+  accessToken  String
+  refreshToken String?
+
+  expiresAt DateTime?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -77,7 +78,6 @@ model User {
   preferences Json
 
   createdAt DateTime @default(now())
-
   updatedAt DateTime @updatedAt
 
   refreshTokens RefreshToken[]
@@ -92,7 +92,7 @@ model User {
 
   upsolves Upsolve[]
 
-  authAccounts AuthAccount[]
+  authAccounts AuthAccount?
 }
 
 model RefreshToken {
@@ -117,16 +117,15 @@ model Account {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @db.Uuid
-
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   platform Platform
-
-  handle String
+  handle   String
 
   createdAt DateTime @default(now())
 
   integration Integration?
+  stats       PlatformStats[]
 
   @@unique([userId, platform])
   @@index([userId])
@@ -135,9 +134,8 @@ model Account {
 model Integration {
   id String @id @default(uuid()) @db.Uuid
 
-  accountId String @unique @db.Uuid
-
-  account Account @relation(fields: [accountId], references: [id])
+  accountId String  @unique @db.Uuid
+  account   Account @relation(fields: [accountId], references: [id])
 
   status IntegrationStatus
 
@@ -146,6 +144,21 @@ model Integration {
   lastError String?
 
   updatedAt DateTime @updatedAt
+}
+
+model PlatformStats {
+  id String @id @default(uuid()) @db.Uuid
+
+  accountId String  @db.Uuid
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  rating      Int?
+  solvedCount Int?
+
+  recordedAt DateTime @default(now())
+
+  @@index([accountId])
+  @@index([recordedAt])
 }
 
 model Problem {
@@ -157,9 +170,6 @@ model Problem {
   // Kept as free text per erd.md: LeetCode reports Easy/Medium/Hard while
   // Codeforces reports a numeric rating (800-3500) — storing the raw
   // platform value avoids forcing an arbitrary mapping between the two.
-  // If a normalized numeric difficulty is needed later (e.g. for sorting
-  // across platforms), add a separate `difficultyRating Int?` field
-  // instead of overloading this one.
   difficulty String
 
   createdAt DateTime @default(now())
@@ -172,9 +182,6 @@ model Problem {
   upsolves              Upsolve[]
   notes                 Note[]
 
-  // Enforces BR-004 (problem dedup): a problem is unique per platform,
-  // identified by the platform's own external id. Sync jobs must upsert
-  // against this constraint, never insert-blind.
   @@unique([externalId, platform])
 }
 
@@ -242,8 +249,6 @@ model Contest {
   externalId String
   platform   Platform
 
-  // Full start/end timestamps (not just a date) per erd.md — required for
-  // the unified contest calendar (FR-011) to show exact times, not just days.
   startTime DateTime
   endTime   DateTime
 
@@ -328,8 +333,12 @@ model Repository {
   userId String @unique @db.Uuid
   user   User   @relation(fields: [userId], references: [id])
 
-  type RepositoryType
-  url  String
+  githubRepositoryId String @unique
+  owner              String
+  name               String
+  defaultBranch      String
+
+  url String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

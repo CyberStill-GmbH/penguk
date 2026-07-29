@@ -13,8 +13,8 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { NotesService } from "./notes.service";
-import { createNoteDto } from "./dto/create-note.dto";
-import { updateNoteDto } from "./dto/update-note.dto";
+import { CreateNoteDto } from "./dto/create-note.dto";
+import { UpdateNoteDto } from "./dto/update-note.dto";
 import { ListNotesQueryDto } from "./dto/list-notes-query.dto";
 import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 
@@ -33,7 +33,7 @@ export class NotesController {
   }
 
   @Post()
-  create(@Req() req: AuthenticatedRequest, @Body() dto: createNoteDto) {
+  create(@Req() req: AuthenticatedRequest, @Body() dto: CreateNoteDto) {
     return this.notesService.create(req.user.userId, dto);
   }
 
@@ -41,7 +41,7 @@ export class NotesController {
   update(
     @Req() req: AuthenticatedRequest,
     @Param("id") id: string,
-    @Body() dto: updateNoteDto,
+    @Body() dto: UpdateNoteDto,
   ) {
     return this.notesService.update(req.user.userId, id, dto);
   }

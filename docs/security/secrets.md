@@ -11,7 +11,7 @@ Referenced before writing `docker-compose.yml` and any `.env` file (Sprint 0, Da
   a schema (e.g. `zod` or NestJS `ConfigModule` with Joi validation) — the
   app fails fast on boot if a required secret is missing, never at
   request time.
-- Never log secret values, even at debug level. Logging the *presence* of
+- Never log secret values, even at debug level. Logging the _presence_ of
   a config key (`"DATABASE_URL loaded"`) is fine; logging its value is not.
 
 ## What counts as a secret
