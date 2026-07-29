@@ -4,13 +4,17 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { createNoteDto } from "./dto/create-note.dto";
+import { GithubService } from "../github/github.service";
+import { CreateNoteDto } from "./dto/create-note.dto";
 import { ListNotesQueryDto } from "./dto/list-notes-query.dto";
-import { updateNoteDto } from "./dto/update-note.dto";
+import { UpdateNoteDto } from "./dto/update-note.dto";
 
 @Injectable()
 export class NotesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly githubService: GithubService,
+  ) {}
 
   async list(userId: string, query: ListNotesQueryDto) {
     const repository = await this.prisma.repository.findUnique({
@@ -43,7 +47,7 @@ export class NotesService {
       pagination: { total, limit: query.limit, offset: query.offset },
     };
   }
-  async create(userId: string, dto: createNoteDto) {
+  async create(userId: string, dto: CreateNoteDto) {
     const repository = await this.prisma.repository.findUnique({
       where: { userId },
     });
@@ -55,6 +59,8 @@ export class NotesService {
 
     const path = `notes/${Date.now()}.md`;
 
+    await this.githubService.writeFile(userId, path, dto.content);
+
     return this.prisma.note.create({
       data: {
         repositoryId: repository.id,
@@ -65,26 +71,28 @@ export class NotesService {
     });
   }
 
-  async update(userId: string, id: string, dto: updateNoteDto) {
+  async findOne(userId: string, id: string) {
     const note = await this.prisma.note.findFirst({
       where: { id, repository: { userId } },
     });
-    if (!note) {
-      throw new NotFoundException("Nota no encontrada");
-    }
+    if (!note) throw new NotFoundException("Nota no encontrada");
+    return note;
+  }
+
+  async update(userId: string, id: string, dto: UpdateNoteDto) {
+    await this.findOne(userId, id);
+
     return this.prisma.note.update({
       where: { id },
-      data: { content: dto.content },
+      data: {
+        ...(dto.content !== undefined && { content: dto.content }),
+        ...(dto.problemId !== undefined && { problemId: dto.problemId }),
+      },
     });
   }
 
   async remove(userId: string, id: string) {
-    const note = await this.prisma.note.findFirst({
-      where: { id, repository: { userId } },
-    });
-    if (!note) {
-      throw new NotFoundException("Nota no encontrada");
-    }
-    return this.prisma.note.delete({ where: { id } });
+    await this.findOne(userId, id);
+    await this.prisma.note.delete({ where: { id } });
   }
 }

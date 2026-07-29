@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsUUID, IsOptional } from "class-validator";
 
-export class createNoteDto {
+export class CreateNoteDto {
   @IsUUID()
   @IsOptional()
   problemId?: string;

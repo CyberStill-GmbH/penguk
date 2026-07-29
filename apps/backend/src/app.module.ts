@@ -13,6 +13,7 @@ import { DashboardModule } from "./dashboard/dashboard.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { ThrottlerModule } from "@nestjs/throttler";
+import { GithubModule } from "./github/github.module";
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ThrottlerModule } from "@nestjs/throttler";
         limit: 10,
       },
     ]),
+    GithubModule,
   ],
   controllers: [AppController],
   providers: [AppService],
