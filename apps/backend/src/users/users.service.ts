@@ -37,6 +37,7 @@ export class UsersService {
     providerAccountId: string;
     email: string;
     username: string;
+    accessToken: string;
   }) {
     const authAccount = await this.db.authAccount.findUnique({
       where: {
@@ -59,6 +60,8 @@ export class UsersService {
           provider: data.provider,
           providerAccountId: data.providerAccountId,
           userId: existingUser.id,
+          username: data.username,
+          accessToken: data.accessToken,
         },
       });
       return existingUser;
@@ -73,6 +76,8 @@ export class UsersService {
           create: {
             provider: data.provider,
             providerAccountId: data.providerAccountId,
+            username: data.username,
+            accessToken: data.accessToken,
           },
         },
       },

@@ -1,4 +1,4 @@
-import { Platform, IntegrationStatus } from "@prisma/client";
+import { Platform, IntegrationStatus } from "../../../generated/prisma";
 
 export interface SyncResult {
   status: IntegrationStatus;
