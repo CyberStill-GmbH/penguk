@@ -2,6 +2,7 @@ listProblems:
   get:
     tags: [Problems]
     summary: List Problems from the shared catalog (read-only, populated by sync)
+3
     parameters:
       - $ref: "../components/parameters.yaml#/LimitParam"
       - $ref: "../components/parameters.yaml#/OffsetParam"
