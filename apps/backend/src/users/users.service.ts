@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../prisma/prisma.service";
+import { UpdatePreferencesDto } from "./dto/update-preferences.dto";
 
 @Injectable()
 export class UsersService {
@@ -21,6 +22,33 @@ export class UsersService {
         preferences: {},
       },
     });
+  }
+
+  async updatePreferences(userId: string, preferences: UpdatePreferencesDto) {
+    const user = await this.db.user.findUnique({
+      where: { id: userId },
+      select: { preferences: true },
+    });
+
+    const updatePreferences = {
+      ...((user?.preferences as UpdatePreferencesDto | null) ?? {}),
+      ...preferences,
+    };
+
+    return this.db.user.update({
+      where: { id: userId },
+      data: { preferences: updatePreferences },
+    });
+  }
+
+  async deleteUser(userId: string) {
+    const user = await this.db.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException(`Usuario con ID ${userId} no encontrado`);
+    }
+
+    return this.db.user.delete({ where: { id: userId } });
   }
 
   async validateCredentials(email: string, password: string) {
