@@ -43,6 +43,12 @@ enum AuthProvider {
   GitHub
 }
 
+enum ExportStatus {
+  Processing
+  Ready
+  Failed
+}
+
 model AuthAccount {
   id String @id @default(uuid()) @db.Uuid
 
@@ -91,6 +97,7 @@ model User {
   contestParticipations ContestParticipation[]
 
   upsolves Upsolve[]
+  exports Export[]
 
   authAccounts AuthAccount?
 }
@@ -117,7 +124,7 @@ model Account {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   platform Platform
   handle   String
@@ -135,7 +142,7 @@ model Integration {
   id String @id @default(uuid()) @db.Uuid
 
   accountId String  @unique @db.Uuid
-  account   Account @relation(fields: [accountId], references: [id])
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   status IntegrationStatus
 
@@ -206,7 +213,7 @@ model ProblemReview {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   problemId String  @db.Uuid
   problem   Problem @relation(fields: [problemId], references: [id])
@@ -275,7 +282,7 @@ model ContestParticipation {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   contestId String  @db.Uuid
   contest   Contest @relation(fields: [contestId], references: [id])
@@ -306,7 +313,7 @@ model Upsolve {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   contestId String  @db.Uuid
   contest   Contest @relation(fields: [contestId], references: [id])
@@ -331,7 +338,7 @@ model Repository {
   id String @id @default(uuid()) @db.Uuid
 
   userId String @unique @db.Uuid
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   githubRepositoryId String @unique
   owner              String
@@ -350,7 +357,7 @@ model Note {
   id String @id @default(uuid()) @db.Uuid
 
   repositoryId String     @db.Uuid
-  repository   Repository @relation(fields: [repositoryId], references: [id])
+  repository   Repository @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
 
   problemId String?  @db.Uuid
   problem   Problem? @relation(fields: [problemId], references: [id])
@@ -363,4 +370,22 @@ model Note {
 
   @@index([repositoryId])
   @@index([problemId])
+}
+
+model Export {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status ExportStatus @default(Processing)
+
+  fileKey String?
+  expiresAt DateTime?
+  error String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
