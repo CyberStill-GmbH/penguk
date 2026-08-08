@@ -61,7 +61,7 @@ describe("IntegrationsController", () => {
   });
 
   describe("sync", () => {
-    it("should call integrationService.triggerSync with correct parameters", () => {
+    it("should call integrationService.triggerSync with correct parameters", async () => {
       const integrationId = "int-456";
       const mockResult = {
         id: "int-456",
@@ -69,12 +69,15 @@ describe("IntegrationsController", () => {
         lastSync: new Date(),
       };
 
-      vi.spyOn(service, "triggerSync").mockReturnValue(mockResult);
+      vi.spyOn(service, "triggerSync").mockResolvedValue(mockResult);
 
-      const result = controller.sync(integrationId);
+      const result = controller.sync(
+        { user: { userId: "user-123" } } as any,
+        integrationId,
+      );
 
-      expect(service.triggerSync).toHaveBeenCalledWith("int-456");
-      expect(result).toEqual(mockResult);
+      expect(service.triggerSync).toHaveBeenCalledWith("user-123", "int-456");
+      await expect(result).resolves.toEqual(mockResult);
     });
   });
 });

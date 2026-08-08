@@ -2,6 +2,7 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { Platform, IntegrationStatus } from "../../../generated/prisma";
 import { IPlatformStrategy, SyncResult } from "./platform.strategy";
 import { PlatformRegistryService } from "./platform-registry.service";
+import { PlatformApiRateLimiter } from "./platform-api-rate-limiter.service";
 
 interface CodeforcesUserInfoResponse {
   status: "OK" | "FAILED";
@@ -25,7 +26,10 @@ export class CodeforcesStrategy implements IPlatformStrategy, OnModuleInit {
   platform = Platform.Codeforces;
   private readonly API_URL = "https://codeforces.com/api";
 
-  constructor(private readonly registry: PlatformRegistryService) {}
+  constructor(
+    private readonly registry: PlatformRegistryService,
+    private readonly rateLimiter: PlatformApiRateLimiter,
+  ) {}
 
   onModuleInit() {
     this.registry.registerStrategy(this);
@@ -33,8 +37,10 @@ export class CodeforcesStrategy implements IPlatformStrategy, OnModuleInit {
 
   async syncUserData(handle: string): Promise<SyncResult> {
     try {
-      const infoRes = await fetch(
-        `${this.API_URL}/user.info?handles=${encodeURIComponent(handle)}`,
+      const infoRes = await this.rateLimiter.execute(Platform.Codeforces, () =>
+        fetch(
+          `${this.API_URL}/user.info?handles=${encodeURIComponent(handle)}`,
+        ),
       );
       if (!infoRes.ok) throw new Error(`HTTP ${infoRes.status}`);
 
@@ -47,8 +53,12 @@ export class CodeforcesStrategy implements IPlatformStrategy, OnModuleInit {
 
       const rating = infoData.result[0].rating;
 
-      const statusRes = await fetch(
-        `${this.API_URL}/user.status?handle=${encodeURIComponent(handle)}`,
+      const statusRes = await this.rateLimiter.execute(
+        Platform.Codeforces,
+        () =>
+          fetch(
+            `${this.API_URL}/user.status?handle=${encodeURIComponent(handle)}`,
+          ),
       );
       if (!statusRes.ok) throw new Error(`HTTP ${statusRes.status}`);
 

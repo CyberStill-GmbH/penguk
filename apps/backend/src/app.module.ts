@@ -14,6 +14,8 @@ import { StatisticsModule } from "./statistics/statistics.module";
 import { JobsModule } from "./jobs/jobs.module";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { GithubModule } from "./github/github.module";
+import { ScheduleModule } from "@nestjs/schedule";
+import { BullModule } from "@nestjs/bullmq";
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { GithubModule } from "./github/github.module";
     StatisticsModule,
     JobsModule,
     PrismaModule,
+    BullModule.forRoot({
+      connection: { url: process.env.REDIS_URL ?? "redis://localhost:6379" },
+    }),
+    ScheduleModule.forRoot(),
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
