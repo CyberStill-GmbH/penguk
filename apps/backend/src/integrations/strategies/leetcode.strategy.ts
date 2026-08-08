@@ -3,6 +3,7 @@ import { Injectable, OnModuleInit } from "@nestjs/common";
 import { Platform, IntegrationStatus } from "../../../generated/prisma"; // ajusta la ruta relativa a tu proyecto
 import { IPlatformStrategy, SyncResult } from "./platform.strategy";
 import { PlatformRegistryService } from "./platform-registry.service";
+import { PlatformApiRateLimiter } from "./platform-api-rate-limiter.service";
 
 interface LeetCodeAcSubmission {
   difficulty: string;
@@ -28,7 +29,10 @@ export class LeetcodeStrategy implements IPlatformStrategy, OnModuleInit {
   platform = Platform.Leetcode;
   private readonly GRAPHQL_URL = "https://leetcode.com/graphql";
 
-  constructor(private readonly registry: PlatformRegistryService) {}
+  constructor(
+    private readonly registry: PlatformRegistryService,
+    private readonly rateLimiter: PlatformApiRateLimiter,
+  ) {}
 
   onModuleInit() {
     this.registry.registerStrategy(this);
@@ -50,18 +54,20 @@ export class LeetcodeStrategy implements IPlatformStrategy, OnModuleInit {
         }
       `;
 
-      const response = await fetch(this.GRAPHQL_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Referer: "https://leetcode.com",
-          "User-Agent": "Penguk-Integration-Bot/1.0",
-        },
-        body: JSON.stringify({
-          query: profileQuery,
-          variables: { username: handle },
+      const response = await this.rateLimiter.execute(Platform.Leetcode, () =>
+        fetch(this.GRAPHQL_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Referer: "https://leetcode.com",
+            "User-Agent": "Penguk-Integration-Bot/1.0",
+          },
+          body: JSON.stringify({
+            query: profileQuery,
+            variables: { username: handle },
+          }),
         }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);

@@ -26,7 +26,7 @@ export class IntegrationsController {
   }
 
   @Post(":id/sync")
-  sync(@Param("id") id: string) {
-    return this.integrationsService.triggerSync(id);
+  sync(@Req() req: RequestWithUser, @Param("id") id: string) {
+    return this.integrationsService.triggerSync(req.user.userId, id);
   }
 }
